@@ -1,7 +1,7 @@
 [Unit]
-Description=Lab robot control HTTP API (로봇 팔, 핸디캠)
+Description=Lab robot control HTTP API (핸디캠)
 Documentation=https://github.com/armchemist/PiRobotControl
-# 네트워크가 올라온 뒤에 시작한다. 팔/캠은 USB라 없어도 서버는 뜨지만,
+# 네트워크가 올라온 뒤에 시작한다. 캠은 USB라 없어도 서버는 뜨지만,
 # 바인드할 주소가 없으면 곤란하다.
 After=network-online.target
 Wants=network-online.target

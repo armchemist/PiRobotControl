@@ -3,9 +3,12 @@
 클라우드의 에이전트는 USB에 손을 뻗을 수 없으므로, 실험대 쪽 컴퓨터가 하드웨어를
 물고 API로 노출한다. 엔드포인트는 에이전트 도구와 1:1로 대응한다.
 
-이 파이가 맡는 것은 **움직이는 것들**이다.
+이 파이가 맡는 것은 레일 위에서 같이 움직이는 핸디캠이다.
 
-    로봇 팔 (USB x2)  +  핸디캠 (USB x2)
+    핸디캠 (USB x2)
+
+로봇 팔도 레일 위에 타지만, 제어는 중앙 서버가 맡는다. 이 파이는 팔을 다루지
+않는다.
 
 레일 자체와 센서(pH/전도도/열화상)는 고정된 파이2가 맡는다. 그쪽은 별도
 저장소(PiSensorServer)다. 레일 구동은 스텝모터 드라이버에 GPIO로 직결돼야 해서,
@@ -60,10 +63,7 @@ app = FastAPI(
 @app.get("/health")
 def health():
     """각 하드웨어의 연결 상태. 어떤 것이 빠져 있어도 200을 돌려준다."""
-    return {
-        "camera": camera.status(),
-        "arm": {"available": False, "error": "ROS 2 미설치"},
-    }
+    return {"camera": camera.status()}
 
 
 # --- 핸디캠 ----------------------------------------------------------------
@@ -117,15 +117,4 @@ def stream(fps: int = Query(default=10, ge=1, le=30)):
     return StreamingResponse(
         frames(),
         media_type=f"multipart/x-mixed-replace; boundary={BOUNDARY}",
-    )
-
-
-# --- 로봇 팔 ---------------------------------------------------------------
-
-
-@app.post("/arm/pose")
-def arm_pose():
-    raise HTTPException(
-        status_code=501,
-        detail="미구현. 라즈베리파이에 ROS 2 Jazzy 설치가 먼저 필요합니다",
     )
